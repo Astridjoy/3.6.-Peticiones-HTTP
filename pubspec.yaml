@@ -1,0 +1,6 @@
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^0.13.6
+  flutter_dotenv: ^5.0.2      # para API_KEYS en .env
+  geolocator: ^9.0.2          # para ubicación local del usuario
