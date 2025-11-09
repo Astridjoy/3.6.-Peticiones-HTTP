@@ -1,0 +1,12 @@
+// lib/services/pokemon_service.dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class PokemonService {
+  Future<Map<String,dynamic>> fetchPokemon(String nameOrId) async {
+    final uri = Uri.parse('https://pokeapi.co/api/v2/pokemon/$nameOrId');
+    final res = await http.get(uri);
+    if (res.statusCode == 200) return json.decode(res.body);
+    throw Exception('PokeAPI error ${res.statusCode}');
+  }
+}
