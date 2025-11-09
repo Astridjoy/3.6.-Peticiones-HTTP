@@ -1,0 +1,20 @@
+// lib/services/movies_service.dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+class MoviesService {
+  final String apiKey = dotenv.env['TMDB_API_KEY'] ?? '';
+
+  Future<Map<String,dynamic>> searchMovie(String query) async {
+    final uri = Uri.https('api.themoviedb.org', '/3/search/movie', {
+      'api_key': apiKey,
+      'query': query,
+      'page': '1',
+      'include_adult': 'false'
+    });
+    final res = await http.get(uri);
+    if (res.statusCode == 200) return json.decode(res.body);
+    throw Exception('TMDB error ${res.statusCode}');
+  }
+}
