@@ -1,0 +1,18 @@
+// lib/services/weather_service.dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+class WeatherService {
+  final String _apiKey = dotenv.env['OPENWEATHER_API_KEY'] ?? '';
+
+  // Obtener clima por lat/lon (current + hourly/daily si quieres)
+  Future<Map<String,dynamic>> fetchCurrentWeather(double lat, double lon) async {
+    final url = Uri.parse(
+      'https://api.openweathermap.org/data/3.0/onecall?lat=$lat&lon=$lon&exclude=minutely&units=metric&appid=$_apiKey'
+    );
+    final res = await http.get(url);
+    if (res.statusCode == 200) return json.decode(res.body);
+    throw Exception('Error weather API: ${res.statusCode}');
+  }
+}
