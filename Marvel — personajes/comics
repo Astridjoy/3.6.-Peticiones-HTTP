@@ -1,0 +1,31 @@
+// lib/services/marvel_service.dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+class MarvelService {
+  final String publicKey = dotenv.env['MARVEL_PUBLIC_KEY'] ?? '';
+  final String privateKey = dotenv.env['MARVEL_PRIVATE_KEY'] ?? '';
+
+  String _hash(String ts) {
+    final input = utf8.encode(ts + privateKey + publicKey);
+    return md5.convert(input).toString();
+  }
+
+  Future<Map<String,dynamic>> fetchCharacters({String nameStartsWith = ''}) async {
+    final ts = DateTime.now().millisecondsSinceEpoch.toString();
+    final hash = _hash(ts);
+    final params = {
+      'ts': ts,
+      'apikey': publicKey,
+      'hash': hash,
+      if (nameStartsWith.isNotEmpty) 'nameStartsWith': nameStartsWith,
+      'limit': '20'
+    };
+    final uri = Uri.https('gateway.marvel.com', '/v1/public/characters', params);
+    final res = await http.get(uri);
+    if (res.statusCode == 200) return json.decode(res.body);
+    throw Exception('Marvel API error ${res.statusCode}');
+  }
+}
