@@ -1,0 +1,44 @@
+// lib/ui/home_screen.dart
+import 'package:flutter/material.dart';
+import '../ui/weather_screen.dart';
+import '../ui/covid_screen.dart';
+import '../ui/marvel_screen.dart';
+import '../ui/pokemon_screen.dart';
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Dashboard info')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: GridView.count(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          children: [
+            _Tile('Clima local', Icons.wb_sunny, () => Navigator.push(context, MaterialPageRoute(builder: (_) => WeatherScreen()))),
+            _Tile('COVID', Icons.local_hospital, () => Navigator.push(context, MaterialPageRoute(builder: (_) => CovidScreen()))),
+            _Tile('Marvel', Icons.auto_stories, () => Navigator.push(context, MaterialPageRoute(builder: (_) => MarvelScreen()))),
+            _Tile('Pokémon', Icons.catching_pokemon, () => Navigator.push(context, MaterialPageRoute(builder: (_) => PokemonScreen()))),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _Tile(String title, IconData icon, VoidCallback onTap) => GestureDetector(
+    onTap: onTap,
+    child: Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Center(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Icon(icon, size: 48),
+          SizedBox(height: 8),
+          Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+        ]),
+      ),
+    ),
+  );
+}
